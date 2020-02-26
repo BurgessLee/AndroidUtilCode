@@ -41,6 +41,7 @@ public final class ToastUtils {
     private static final String NULL          = "null";
 
     private static IToast iToast;
+    private static int    sLayoutResId = -1;
     private static int    sGravity     = -1;
     private static int    sXOffset     = -1;
     private static int    sYOffset     = -1;
@@ -51,6 +52,15 @@ public final class ToastUtils {
 
     private ToastUtils() {
         throw new UnsupportedOperationException("u can't instantiate me...");
+    }
+
+    /**
+     * Set the XML resource of layout.
+     *
+     * @param layoutResId The XML resource of layout.
+     */
+    public static void setLayoutResId(@LayoutRes final int layoutResId) {
+        sLayoutResId = layoutResId;
     }
 
     /**
@@ -260,6 +270,9 @@ public final class ToastUtils {
             public void run() {
                 cancel();
                 iToast = ToastFactory.makeToast(Utils.getApp(), text, duration);
+                if (sLayoutResId != -1) {
+                    iToast.setView(getView(sLayoutResId));
+                }
                 final View toastView = iToast.getView();
                 if (toastView == null) return;
                 final TextView tvMessage = toastView.findViewById(android.R.id.message);
